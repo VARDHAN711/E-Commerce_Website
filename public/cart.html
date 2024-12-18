@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce Website</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <section id="header">
+        <a href="#"><img src="ImageFiles/logo.png" alt="logo" class="logo"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li id="lg-bag"><a href="cart.html"  class="active"><i class="fas fa-shopping-bag"></i></a></li>
+                <a href="#" id="close"><i class="fa-solid fa-xmark"></i></a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <i class="fas fa-shopping-bag"></i>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <section id="page-header" class="about-header">
+        <h2 id="contact-h2">#Let's Talk</h2> 
+        <p>LEAVE A MESSAGE, We love to hear from you!</p>        
+    </section>
+
+    <section id="cart" class="section-p1">
+        <table width="100%" id="cartTable">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Sub Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                
+            </tbody>
+        </table>
+    </section>
+
+    <section id="cart-add" class="section-p1">
+        <div id="coupon">
+            <h3>Apply Coupon</h3>
+            <div>
+                <input type="text" placeholder="Enter Your Coupon">
+                <button class="normal">Apply</button>
+            </div>
+        </div>
+
+        <div id="subtotal">
+            <h3>Cart Total</h3>
+            <table>
+                <tr>
+                    <td>Cart Subtotal</td>
+                    <td id="cartSubtotal">₹0</td>
+                </tr>
+
+                <tr>
+                    <td>Shipping</td>
+                    <td>Free</td>
+                </tr>
+
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td id="cartTotal"><strong>₹0</strong></td> 
+                </tr>
+            </table>
+            <button class="normal" id="checkoutBtn">Proceed to checkout</button>
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img src="ImageFiles/logo.png" class="logo" alt="logo">
+            <h4>Contact</h4>
+            <p><strong>Address: </strong>No. 42, 3rd Floor, Brigade Road, Ashok Nagar, Bangalore, Karnataka, 560001, India.</p>
+            <p><strong>Phone: </strong>080-12345678 /044-87654321</p>
+            <p><strong>Hours: </strong>10:00 - 18:00, Mon-Sat</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Condition</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App store or Google Play</p>
+            <div class="row">
+                <img src="ImageFiles/pay/app.jpg" alt="">
+                <img src="ImageFiles/pay/play.jpg" alt="">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="ImageFiles/pay/pay.png" alt="">
+        </div>
+    </footer>
+
+    <script>
+        // Function to display cart items
+        document.addEventListener("DOMContentLoaded", function () {
+            // Function to display cart items
+            function displayCart() {
+                const cart = JSON.parse(localStorage.getItem("cart")) || [];
+                const cartTableBody = document.querySelector("#cartTable tbody");
+                const totalPriceElement = document.getElementById("totalPrice");
+                let subtotal = 0;
+
+                // Clear any existing rows
+                cartTableBody.innerHTML = "";
+
+                // Loop through the cart and create rows
+                cart.forEach((product, index) => {
+                    const row = document.createElement("tr");
+
+                    // Create table cells for each product property
+                    row.innerHTML = `
+                        <td><img src="${product.image}" alt="${product.name}" width="100"></td>
+                        <td>${product.name}</td>
+                        <td>${product.size}</td>
+                        <td>${product.quantity}</td>
+                        <td>₹${product.price}</td>
+                        <td>₹${product.totalCost}</td>
+                        <td><button class="removeBtn" data-index="${index}"><i class="fa-regular fa-circle-xmark"></i></button></td>
+                    `;
+
+                    // Append the row to the table body
+                    cartTableBody.appendChild(row);
+
+                    // Add to subtotal price
+                    subtotal += product.totalCost;
+                });
+               
+                // Update Cart Subtotal and Total
+                const shippingCost = 0;  // Free shipping
+                const total = subtotal + shippingCost;
+                
+                // Update subtotal and total values in the HTML
+                document.getElementById("cartSubtotal").innerText = `₹${subtotal}`;
+                document.getElementById("cartTotal").innerText = `₹${total}`;
+                
+                // Update total price
+                totalPriceElement.innerText = `Total: ₹${subtotal}`;
+            }
+
+
+            // Function to remove item from cart
+            function removeFromCart(index) {
+                let cart = JSON.parse(localStorage.getItem("cart")) || [];
+                cart.splice(index, 1);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                displayCart();  // Re-render the cart after removal
+            }
+
+            // Event delegation: Listen for remove button clicks in the cart table
+            document.querySelector("#cartTable tbody").addEventListener("click", function (e) {
+                // Check if the clicked element is the button or inside the button
+                if (e.target && e.target.closest(".removeBtn")) {
+                    const productIndex = e.target.closest(".removeBtn").getAttribute("data-index");
+                    removeFromCart(productIndex);
+                }
+            });
+
+            // Call the displayCart function on page load
+            displayCart();
+        });
+    </script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
