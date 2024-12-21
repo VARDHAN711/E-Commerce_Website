@@ -1,0 +1,31 @@
+[
+    {
+        "id": 1,
+        "name": "Cartoon Astronaut Shirt",
+        "price": 500,
+        "sizes": ["S", "M", "L", "XL"],
+        "image": "/ImageFiles/products/f1.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Cartoon Astronaut Shirt",
+        "price": 500,
+        "sizes": ["S", "M", "L", "XL"],
+        "image": "/ImageFiles/products/f2.jpg"
+    },
+    {
+    "id": 3,
+    "name": "Cartoon Astronaut Shirt",
+    "price": 500,
+    "sizes": ["S", "M", "L", "XL"],
+    "image": "/ImageFiles/products/f3.jpg"
+    },
+    {
+    "id": 4,
+    "name": "Cartoon Astronaut Shirt",
+    "price": 500,
+    "sizes": ["S", "M", "L", "XL"],
+    "image": "/ImageFiles/products/f4.jpg"
+    }
+  ]
+  
