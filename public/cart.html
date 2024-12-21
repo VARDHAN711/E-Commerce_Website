@@ -136,74 +136,52 @@
     </footer>
 
     <script>
-        // Function to display cart items
-        document.addEventListener("DOMContentLoaded", function () {
-            // Function to display cart items
-            function displayCart() {
-                const cart = JSON.parse(localStorage.getItem("cart")) || [];
-                const cartTableBody = document.querySelector("#cartTable tbody");
-                const totalPriceElement = document.getElementById("totalPrice");
-                let subtotal = 0;
-
-                // Clear any existing rows
-                cartTableBody.innerHTML = "";
-
-                // Loop through the cart and create rows
-                cart.forEach((product, index) => {
-                    const row = document.createElement("tr");
-
-                    // Create table cells for each product property
-                    row.innerHTML = `
-                        <td><img src="${product.image}" alt="${product.name}" width="100"></td>
-                        <td>${product.name}</td>
-                        <td>${product.size}</td>
-                        <td>${product.quantity}</td>
-                        <td>₹${product.price}</td>
-                        <td>₹${product.totalCost}</td>
-                        <td><button class="removeBtn" data-index="${index}"><i class="fa-regular fa-circle-xmark"></i></button></td>
-                    `;
-
-                    // Append the row to the table body
-                    cartTableBody.appendChild(row);
-
-                    // Add to subtotal price
-                    subtotal += product.totalCost;
-                });
-               
-                // Update Cart Subtotal and Total
-                const shippingCost = 0;  // Free shipping
-                const total = subtotal + shippingCost;
-                
-                // Update subtotal and total values in the HTML
-                document.getElementById("cartSubtotal").innerText = `₹${subtotal}`;
-                document.getElementById("cartTotal").innerText = `₹${total}`;
-                
-                // Update total price
-                totalPriceElement.innerText = `Total: ₹${subtotal}`;
+        // Fetch and display cart items
+        function displayCart() {
+            fetch("/api/cart")
+                .then(response => response.json())
+                .then(cart => {
+                    const cartTableBody = document.querySelector("#cartTable tbody");
+                    let subtotal = 0;
+        
+                    cartTableBody.innerHTML = ""; // Clear table
+                    cart.forEach((item, index) => {
+                        const row = document.createElement("tr");
+                        row.innerHTML = `
+                            <td><img src="${item.image}"  width="100"></td>
+                            <td>${item.name}</td>
+                            <td>${item.size}</td>
+                            <td>${item.quantity}</td>
+                            <td>₹${item.price}</td>
+                            <td>₹${item.totalCost}</td>
+                            <td><button class="removeBtn" data-index="${index}">Remove</button></td>
+                        `;
+                        cartTableBody.appendChild(row);
+                        subtotal += item.totalCost;
+                    });
+        
+                    document.getElementById("cartSubtotal").innerText = `₹${subtotal}`;
+                    document.getElementById("cartTotal").innerText = `₹${subtotal}`;
+                })
+                .catch(err => console.error("Error fetching cart:", err));
+        }
+        
+        // Remove item from cart
+        document.querySelector("#cartTable tbody").addEventListener("click", e => {
+            if (e.target.classList.contains("removeBtn")) {
+                const index = e.target.getAttribute("data-index");
+        
+                fetch(`/api/cart/${index}`, { method: "DELETE" })
+                    .then(response => response.json())
+                    .then(() => displayCart())
+                    .catch(err => console.error("Error removing item:", err));
             }
-
-
-            // Function to remove item from cart
-            function removeFromCart(index) {
-                let cart = JSON.parse(localStorage.getItem("cart")) || [];
-                cart.splice(index, 1);
-                localStorage.setItem("cart", JSON.stringify(cart));
-                displayCart();  // Re-render the cart after removal
-            }
-
-            // Event delegation: Listen for remove button clicks in the cart table
-            document.querySelector("#cartTable tbody").addEventListener("click", function (e) {
-                // Check if the clicked element is the button or inside the button
-                if (e.target && e.target.closest(".removeBtn")) {
-                    const productIndex = e.target.closest(".removeBtn").getAttribute("data-index");
-                    removeFromCart(productIndex);
-                }
-            });
-
-            // Call the displayCart function on page load
-            displayCart();
         });
-    </script>
+        
+        // Load cart on page load
+        displayCart();
+        </script>
+        
     
     <script src="script.js"></script>
 </body>
