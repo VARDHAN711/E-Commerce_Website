@@ -32,7 +32,7 @@
 
     <section id="prodetails" class="section-p1">
         <div class="single-pro-imgage">
-            <img src="ImageFiles/products/f1.jpg" width="100%" id="Mainimg" alt="">
+            <img src="ImageFiles/products/f1.jpg" width="100%" id="Mainimg" alt="" id="mainProductImage">
 
             <div class="small-img-group">
                 <div class="small-img-col">
@@ -52,7 +52,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="single-pro-details">
             <h6>Home / T-Shirts</h6>
             <h4 id="productName">Cartoon Astronaut Shirts</h4>
@@ -60,10 +60,6 @@
             <label for="productSize"></label>
             <select id="productSize">
                 <option value="Select Size">Select Size</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-                <option value="Small">Small</option>
-                <option value="Large">Large</option>
             </select>
             <label for="quantity">Quantity:</label>
             <input type="number" value="1" min="1" id="quantity">
@@ -211,63 +207,67 @@
 
     <script>
         // Image selection logic
-        let mainImg = document.getElementById("Mainimg");
-        let smallImg = document.getElementsByClassName("small-img");
-
-        smallImg[0].onclick = function(){
-            mainImg.src = smallImg[0].src;
-        }
-
-        smallImg[1].onclick = function(){
-            mainImg.src = smallImg[1].src;
-        }
-
-        smallImg[2].onclick = function(){
-            mainImg.src = smallImg[2].src;
-        }
-
-        smallImg[3].onclick = function(){
-            mainImg.src = smallImg[3].src;
-        }
-
-        // Add product to cart
-        const productName = document.getElementById("productName").innerText;  // Get the product name text content
-        const productPrice = parseFloat(document.getElementById("productPrice").innerText.replace('₹', '')); // Get the product price and convert it to a number
-        const productImage = mainImg.src;  // Main image element
-        const addToCartBtn = document.getElementById("addToCartBtn");  // Add to cart button
-        const sizeSelect = document.getElementById("productSize");  // Size selection dropdown
-        const quantityInput = document.getElementById("quantity");  // Quantity input
-
-        // Add event listener to the "Add to Cart" button
-        addToCartBtn.addEventListener("click", function () {
-            // Get selected size and quantity
-            const selectedSize = sizeSelect.value;
-            const quantity = parseInt(quantityInput.value);
-
-            // Create the product object
-            const product = {
-                name: productName,
-                image: productImage,
-                size: selectedSize,
-                quantity: quantity,
-                price: productPrice,
-                totalCost: productPrice * quantity,
+        const mainImg = document.getElementById("Mainimg");
+        const smallImg = document.getElementsByClassName("small-img");
+    
+        // Ensure the first thumbnail is shown by default
+        mainImg.src = smallImg[0].src;
+    
+        // Add click event listeners for thumbnail images
+        for (let i = 0; i < smallImg.length; i++) {
+            smallImg[i].onclick = function () {
+                mainImg.src = smallImg[i].src;
             };
+        }
+    
+        // Fetch product details dynamically
+        const productId = 1; // Replace with logic to get product ID dynamically
+        fetch(`/api/products/${productId}`)
+            .then(response => response.json())
+            .then(product => {
+                document.getElementById("productName").innerText = product.name;
+                document.getElementById("productPrice").innerText = `₹${product.price}`;
+    
+                // Update the main image only if the API provides an image
+                if (product.image) {
+                    mainImg.src = product.image;
+                }
+    
+                // Populate size options
+                const sizeSelect = document.getElementById("productSize");
+                product.sizes.forEach(size => {
+                    const option = document.createElement("option");
+                    option.value = size;
+                    option.text = size;
+                    sizeSelect.appendChild(option);
+                });
+            })
+            .catch(err => console.error("Error fetching product details:", err));
+    
+        // Add product to cart
+        document.getElementById("addToCartBtn").addEventListener("click", () => {
+            const selectedSize = document.getElementById("productSize").value;
+            const quantity = parseInt(document.getElementById("quantity").value);
+            const productImage = document.getElementById("Mainimg").src; // Get the image URL
 
-            // Get existing cart data from localStorage
-            let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-            // Add the new product to the cart
-            cart.push(product);
-
-            // Save the updated cart back to localStorage
-            localStorage.setItem("cart", JSON.stringify(cart));
-
-            // Optionally, alert the user
-            alert(`${productName} added to the cart.`);
+            fetch("/api/cart", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: productId,
+                    size: selectedSize,
+                    quantity: quantity,
+                    image: productImage, // Include the product image URL
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`${data.name} added to the cart.`);
+            })
+            .catch(err => console.error("Error adding to cart:", err));
         });
-
     </script>
+
     <script src="script.js"></script>
 </body>
 </html>
