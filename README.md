@@ -14,6 +14,15 @@ An eCommerce website built using HTML, CSS, JavaScript, and Node.js with Express
   - Single Product Page  
   - Cart Page  
 - **Responsive Design**: Fully responsive website design for seamless user experience on desktop and mobile devices.  
-- **User-Friendly Navigation**: Clear and consistent navigation links between all pages.  
+- **User-Friendly Navigation**: Clear and consistent navigation links between all pages.
+- 
+## 🛠️ Tech Stack (Full Stack)
 
-## Directory Structure  
+### 🌐 Frontend
+- HTML  
+- CSS  
+- JavaScript  
+
+### ⚙️ Backend
+- Node.js  
+- Express.js
